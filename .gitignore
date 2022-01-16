@@ -1,0 +1,6 @@
+## My stuff
+*.DS_Store
+
+## Xcode
+# User settings
+xcuserdata/
