@@ -14,37 +14,32 @@ struct ContentView: View {
             VStack {
                 HStack {
                     Text("Name")
-                        .font(.headline)
-                        .frame(width: 100, alignment: .trailing)
+                        .modifier(ViewModifierLeft())
                     Text(musicModel.trackInfo.name)
-                        .frame(width: 200, alignment: .leading)
+                        .modifier(ViewModifierRight())
                 }
                 HStack {
                     Text("Artist")
-                        .font(.headline)
-                        .frame(width: 100, alignment: .trailing)
+                        .modifier(ViewModifierLeft())
                     Text(musicModel.trackInfo.artist)
-                        .frame(width: 200, alignment: .leading)
+                        .modifier(ViewModifierRight())
                 }
                 HStack {
                     Text("Album")
-                        .font(.headline)
-                        .frame(width: 100, alignment: .trailing)
+                        .modifier(ViewModifierLeft())
                     Text(musicModel.trackInfo.album)
-                        .frame(width: 200, alignment: .leading)
+                        .modifier(ViewModifierRight())
                 }
                 HStack {
                     Text("Duration")
-                        .font(.headline)
-                        .frame(width: 100, alignment: .trailing)
+                        .modifier(ViewModifierLeft())
                     Text(musicModel.trackDuration)
-                        .frame(width: 200, alignment: .leading)
+                        .modifier(ViewModifierRight())
                 }
                 HStack {
                     Button(action: {
                         musicModel.toggleLoved()
                     }, label: {
-                        
                         Label(title: {
                             Text(musicModel.trackInfo.loved ? "Unlove this song" : "Love this song")
                         }, icon: {
@@ -57,23 +52,23 @@ struct ContentView: View {
             .padding()
             Slider(value: $musicModel.soundVolume, in: 0...100,
                    onEditingChanged: { _ in
-                musicModel.iTunesBridge.soundVolume = NSNumber(value: musicModel.soundVolume)
+                musicModel.musicBridge.soundVolume = NSNumber(value: musicModel.soundVolume)
             })
                 .frame(width: 200)
             HStack {
                 Button(action: {
-                    musicModel.iTunesBridge.gotoPreviousTrack()
+                    musicModel.musicBridge.gotoPreviousTrack()
                 }, label: {
                     Image(systemName: "backward.fill")
                 })
                 Button(action: {
-                    musicModel.iTunesBridge.playPause()
+                    musicModel.musicBridge.playPause()
                 }, label: {
                     Image(systemName: musicModel.playerState == .playing ? "pause.fill" : "play.fill")
                 })
                     .frame(width: 40)
                 Button(action: {
-                    musicModel.iTunesBridge.gotoNextTrack()
+                    musicModel.musicBridge.gotoNextTrack()
                 }, label: {
                     Image(systemName: "forward.fill")
                 })
@@ -82,7 +77,29 @@ struct ContentView: View {
         }
         .frame(width: 400)
         .task {
-            musicModel.soundVolume = musicModel.iTunesBridge.soundVolume.doubleValue
+            /// Update UI only if Music is already running
+            if musicModel.isRunning {
+                musicModel.parseTrack()
+            }
+            musicModel.soundVolume = musicModel.musicBridge.soundVolume.doubleValue
+        }
+    }
+}
+
+extension ContentView {
+    /// View modifier for Left column
+    struct ViewModifierLeft: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .font(.headline)
+                .frame(width: 100, alignment: .trailing)
+        }
+    }
+    /// View modifier for Right column
+    struct ViewModifierRight: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .frame(width: 200, alignment: .leading)
         }
     }
 }

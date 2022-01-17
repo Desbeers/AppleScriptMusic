@@ -11,8 +11,8 @@
 		D7F7CD6627935CCC0013D0BB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD6527935CCC0013D0BB /* ContentView.swift */; };
 		D7F7CD6827935CCE0013D0BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7F7CD6727935CCE0013D0BB /* Assets.xcassets */; };
 		D7F7CD6B27935CCE0013D0BB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7F7CD6A27935CCE0013D0BB /* Preview Assets.xcassets */; };
-		D7F7CD7527935D760013D0BB /* iTunesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7327935D760013D0BB /* iTunesBridge.swift */; };
-		D7F7CD7627935D760013D0BB /* iTunesBridge.applescript in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7427935D760013D0BB /* iTunesBridge.applescript */; };
+		D7F7CD7527935D760013D0BB /* MusicBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7327935D760013D0BB /* MusicBridge.swift */; };
+		D7F7CD7627935D760013D0BB /* MusicBridge.applescript in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7427935D760013D0BB /* MusicBridge.applescript */; };
 		D7F7CD782793619A0013D0BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD772793619A0013D0BB /* AppDelegate.swift */; };
 		D7F7CD7B279367F00013D0BB /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F7CD7A279367F00013D0BB /* AppleScriptObjC.framework */; };
 		D7F7CD7D279436F60013D0BB /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7C279436F60013D0BB /* Model.swift */; };
@@ -27,8 +27,8 @@
 		D7F7CD6727935CCE0013D0BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7F7CD6A27935CCE0013D0BB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D7F7CD6C27935CCE0013D0BB /* AppleScriptMusic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AppleScriptMusic.entitlements; sourceTree = "<group>"; };
-		D7F7CD7327935D760013D0BB /* iTunesBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesBridge.swift; sourceTree = "<group>"; };
-		D7F7CD7427935D760013D0BB /* iTunesBridge.applescript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.applescript; path = iTunesBridge.applescript; sourceTree = "<group>"; };
+		D7F7CD7327935D760013D0BB /* MusicBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicBridge.swift; sourceTree = "<group>"; };
+		D7F7CD7427935D760013D0BB /* MusicBridge.applescript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.applescript; path = MusicBridge.applescript; sourceTree = "<group>"; };
 		D7F7CD772793619A0013D0BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7F7CD7A279367F00013D0BB /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
 		D7F7CD7C279436F60013D0BB /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -70,14 +70,14 @@
 		D7F7CD6227935CCC0013D0BB /* AppleScriptMusic */ = {
 			isa = PBXGroup;
 			children = (
-				D7F7CD7227935D2A0013D0BB /* iTunesBridge */,
+				D7F7CD7227935D2A0013D0BB /* MusicBridge */,
 				D7F7CD6327935CCC0013D0BB /* AppleScriptMusicApp.swift */,
 				D7F7CD6527935CCC0013D0BB /* ContentView.swift */,
 				D7F7CD7C279436F60013D0BB /* Model.swift */,
+				D7F7CD772793619A0013D0BB /* AppDelegate.swift */,
 				D7F7CD6727935CCE0013D0BB /* Assets.xcassets */,
 				D7F7CD6C27935CCE0013D0BB /* AppleScriptMusic.entitlements */,
 				D7F7CD6927935CCE0013D0BB /* Preview Content */,
-				D7F7CD772793619A0013D0BB /* AppDelegate.swift */,
 			);
 			path = AppleScriptMusic;
 			sourceTree = "<group>";
@@ -90,13 +90,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		D7F7CD7227935D2A0013D0BB /* iTunesBridge */ = {
+		D7F7CD7227935D2A0013D0BB /* MusicBridge */ = {
 			isa = PBXGroup;
 			children = (
-				D7F7CD7427935D760013D0BB /* iTunesBridge.applescript */,
-				D7F7CD7327935D760013D0BB /* iTunesBridge.swift */,
+				D7F7CD7427935D760013D0BB /* MusicBridge.applescript */,
+				D7F7CD7327935D760013D0BB /* MusicBridge.swift */,
 			);
-			path = iTunesBridge;
+			path = MusicBridge;
 			sourceTree = "<group>";
 		};
 		D7F7CD79279367F00013D0BB /* Frameworks */ = {
@@ -200,10 +200,10 @@
 			files = (
 				D7F7CD6627935CCC0013D0BB /* ContentView.swift in Sources */,
 				D7F7CD6427935CCC0013D0BB /* AppleScriptMusicApp.swift in Sources */,
-				D7F7CD7627935D760013D0BB /* iTunesBridge.applescript in Sources */,
+				D7F7CD7627935D760013D0BB /* MusicBridge.applescript in Sources */,
 				D7F7CD7D279436F60013D0BB /* Model.swift in Sources */,
 				D7F7CD782793619A0013D0BB /* AppDelegate.swift in Sources */,
-				D7F7CD7527935D760013D0BB /* iTunesBridge.swift in Sources */,
+				D7F7CD7527935D760013D0BB /* MusicBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

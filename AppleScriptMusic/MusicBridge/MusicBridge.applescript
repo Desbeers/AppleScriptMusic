@@ -1,15 +1,15 @@
-script iTunesBridge
+script MusicBridge
 	
 	property parent : class "NSObject"
 	
-	
+	-- Check if Music is running
 	to _isRunning() -- () -> NSNumber (Bool)
 		-- AppleScript will automatically launch apps before sending Apple events;
 		-- if that is undesirable, check the app object's `running` property first
         return running of application id "com.apple.Music"
 	end isRunning
 	
-	
+	--- Get the current state of Music
 	to _playerState() -- () -> NSNumber (PlayerState)
 		tell application id "com.apple.Music"
 			if running then
@@ -25,7 +25,7 @@ script iTunesBridge
 		end tell
 	end playerState
 	
-	
+	--- Get info about the current playing track
 	to trackInfo() -- () -> ["trackName":NSString, "trackArtist":NSString, "trackAlbum":NSString, "trackLoved":NSNumber (Bool), "trackNumber":NSNumber]?
 		tell application id "com.apple.Music"
 			try
@@ -36,20 +36,22 @@ script iTunesBridge
 		end tell
 	end trackInfo
 	
+    --- Get the duration of the current playing track
 	to trackDuration() -- () -> NSNumber (Double, >=0)
 		tell application id "com.apple.Music"
 			return duration of current track
 		end tell
 	end trackDuration
 	
-	
+	--- Get Music volume setting
 	to soundVolume() -- () -> NSNumber (Int, 0...100)
 		tell application id "com.apple.Music"
 			return sound volume -- ASOC will convert returned integer to NSNumber
 		end tell
 	end soundVolume
 	
-	to setSoundVolume:newVolume -- (NSNumber) -> ()
+    --- Set the volume of Music
+	to setSoundVolume_(newVolume) -- (NSNumber) -> ()
 		-- ASOC does not convert NSObject parameters to AS types automatically…
 		tell application id "com.apple.Music"
 			-- …so be sure to coerce NSNumber to native integer before using it in Apple event
@@ -57,19 +59,25 @@ script iTunesBridge
 		end tell
 	end setSoundVolume:
 	
-	
+	--- Play or pause Music
 	to playPause()
 		tell application id "com.apple.Music" to playpause
 	end playPause
 	
+    --- Goto next track
 	to gotoNextTrack()
 		tell application id "com.apple.Music" to next track
 	end gotoNextTrack
 	
+    --- Goto previous track
 	to gotoPreviousTrack()
 		tell application id "com.apple.Music" to previous track
 	end gotoPreviousTrack
 
+    --- Love or unlove a song
+    ---
+    --- I'm nit using 'current track' here on purpose
+    --- because I want to make it more 'modulair' for future project.
     to setLoved_(theTrack)
         set trackName to item 1 of theTrack as strings
         set trackArtist to item 2 of theTrack as strings

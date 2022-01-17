@@ -6,39 +6,42 @@
 //
 
 import Foundation
+import AppleScriptObjC
 
 class MusicModel: ObservableObject {
     /// The shared instance of this MusicModel class
     static let shared = MusicModel()
-    // AppleScriptObjC object for communicating with iTunes
-    var iTunesBridge: iTunesBridge
-    
+    /// AppleScriptObjC object for communicating with Music
+    var musicBridge: MusicBridge
+    /// Info of current playing track; published because in the UI
     @Published var trackInfo = Track()
+    /// Value of volume level; published because in the UI
     @Published var soundVolume: Double = 0
-    
+    /// The current state of Music
     var playerState: PlayerState {
-        return PlayerState(rawValue: iTunesBridge._playerState as? Int ?? 0)!
+        return PlayerState(rawValue: musicBridge._playerState as? Int ?? 0)!
     }
-    
+    /// Bool if Music is running or not
     var isRunning: Bool {
-        return iTunesBridge._isRunning.boolValue
-        
+        return musicBridge._isRunning.boolValue
     }
-    
+    /// AppleScriptObjC setup
     init() {
-        // AppleScriptObjC setup
         Bundle.main.loadAppleScriptObjectiveCScripts()
-        // create an instance of iTunesBridge script object for Swift code to use
-        let iTunesBridgeClass: AnyClass = NSClassFromString("iTunesBridge")!
-        self.iTunesBridge = iTunesBridgeClass.alloc() as! iTunesBridge
+        //// create an instance of MusicBridge script object for Swift code to use
+        let musicBridgeClass: AnyClass = NSClassFromString("MusicBridge")!
+        self.musicBridge = musicBridgeClass.alloc() as! MusicBridge
     }
-    
+    /// Update track info in the UI
     @MainActor func parseTrack() {
-        trackInfo = Track(dictionary: iTunesBridge.trackInfo! as NSDictionary)
+        /// trackInfo might be nil, so check...
+        if let info = musicBridge.trackInfo as NSDictionary? {
+            trackInfo = Track(dictionary: info)
+        }
     }
-    
+    /// Toggle the 'love' button in the UI
     @MainActor func toggleLoved() {
-        iTunesBridge.loved = [
+        musicBridge.loved = [
             trackInfo.name as NSString,
             trackInfo.artist as NSString,
             trackInfo.album as NSString,
@@ -46,16 +49,17 @@ class MusicModel: ObservableObject {
         ]
         parseTrack()
     }
-    
+    /// The duration of the current track as String
     var trackDuration: String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
-        let formattedString = formatter.string(from: TimeInterval(truncating: iTunesBridge.trackDuration))!
+        let formattedString = formatter.string(from: TimeInterval(truncating: musicBridge.trackDuration))!
         return formattedString
     }
 }
 
+/// A Struct for track information
 struct Track {
     var artist: String = ""
     var album: String = ""
@@ -65,6 +69,7 @@ struct Track {
 }
 
 extension Track {
+    /// Init the Struct with valuis from the MusicBridge
     init(dictionary: NSDictionary) {
         self.artist = dictionary.value(forKey: "trackArtist") as! String
         self.album = dictionary.value(forKey: "trackAlbum") as! String

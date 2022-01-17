@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import AppleScriptObjC
 
+/// The Main Application
 @main
 struct AppleScriptMusicApp: App {
     /// The MusicModel
@@ -20,6 +20,7 @@ struct AppleScriptMusicApp: App {
             ContentView().environmentObject(musicModel)
                 .navigationTitle("SwiftUI Music Remote with AppleScript")
                 .navigationSubtitle("Proof of concept")
+                /// An empty toolbar so above will be shown below each other
                 .toolbar {
                     ToolbarItem {
                         Spacer()
