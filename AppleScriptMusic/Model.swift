@@ -49,6 +49,17 @@ class MusicModel: ObservableObject {
         ]
         parseTrack()
     }
+    /// Set the rating of a track in the UI
+    @MainActor func setRating(rating: Int) {
+        musicBridge.rating = [
+            trackInfo.name as NSString,
+            trackInfo.artist as NSString,
+            trackInfo.album as NSString,
+            NSString(string: "\(trackInfo.trackNumber)"),
+            NSString(string: "\(rating)")
+        ]
+        parseTrack()
+    }
     /// The duration of the current track as String
     var trackDuration: String {
         let formatter = DateComponentsFormatter()
@@ -60,12 +71,13 @@ class MusicModel: ObservableObject {
 }
 
 /// A Struct for track information
-struct Track {
+struct Track: Equatable {
     var artist: String = ""
     var album: String = ""
     var name: String = ""
     var loved: Bool = false
     var trackNumber: Int = 0
+    var trackRating: Int = 0
 }
 
 extension Track {
@@ -76,5 +88,7 @@ extension Track {
         self.name = dictionary.value(forKey: "trackName") as! String
         self.loved = dictionary.value(forKey: "trackLoved") as! Bool
         self.trackNumber = dictionary.value(forKey: "trackNumber") as! Int
+        /// Track rating im Music goes from 0 - 100, the UI is using only 5 stars
+        self.trackRating = (dictionary.value(forKey: "trackRating") as! Int) / 20
     }
 }

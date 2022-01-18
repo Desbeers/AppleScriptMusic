@@ -26,10 +26,10 @@ script MusicBridge
 	end playerState
 	
 	--- Get info about the current playing track
-	to trackInfo() -- () -> ["trackName":NSString, "trackArtist":NSString, "trackAlbum":NSString, "trackLoved":NSNumber (Bool), "trackNumber":NSNumber]?
+	to trackInfo()
 		tell application id "com.apple.Music"
 			try
-				return {trackName:name, trackArtist:artist, trackAlbum:album, trackLoved:loved, trackNumber:track number} of current track
+				return {trackName:name, trackArtist:artist, trackAlbum:album, trackLoved:loved, trackNumber:track number, trackRating: rating, trackRatingKind: rating kind} of current track
 			on error number -1728 -- current track is not available
 				return missing value -- nil
 			end try
@@ -76,7 +76,7 @@ script MusicBridge
 
     --- Love or unlove a song
     ---
-    --- I'm nit using 'current track' here on purpose
+    --- I'm not using 'current track' here on purpose
     --- because I want to make it more 'modulair' for future project.
     to setLoved_(theTrack)
         set trackName to item 1 of theTrack as strings
@@ -85,14 +85,43 @@ script MusicBridge
         set trackNumber to item 4 of theTrack as strings
         set status to "I love this song"
         tell application id "com.apple.Music"
-            set trk to (first track whose name is trackName and artist = trackArtist and album = trackAlbum)
+            set trk to (first track whose name is trackName and artist = trackArtist and album = trackAlbum and track number = trackNumber)
             if loved of trk is true then
                 set status to "I don't love this song anymore"
                 set loved of trk to false
+                set rating of trk to 1
                 else
                 set loved of trk to true
+                set rating of trk to 100
             end if
         end tell
         display notification status with title trackName sound name "Frog"
-    end toggleLoved
+    end setLoved
+
+    --- Rate a song
+    ---
+    --- If a song is rated 5 starts it will be 'loved' as well
+    ---
+    --- I'm not using 'current track' here on purpose
+    --- because I want to make it more 'modulair' for future project.
+    to setRating_(theTrack)
+        set trackName to item 1 of theTrack as strings
+        set trackArtist to item 2 of theTrack as strings
+        set trackAlbum to item 3 of theTrack as strings
+        set trackNumber to item 4 of theTrack as strings
+        set trackRating to item 5 of theTrack as integer * 20
+        set status to "I rate this song " & (trackRating / 20 as integer) & " stars"
+        tell application id "com.apple.Music"
+            set trk to (first track whose name is trackName and artist = trackArtist and album = trackAlbum and track number = trackNumber)
+            set rating of trk to trackRating
+            --- Love this song if it has 5 stars, unlove it when it is less
+            if trackRating is 100 then
+                set loved of trk to true
+                else
+                set loved of trk to false
+            end if
+        end tell
+        display notification status with title trackName sound name "Frog"
+    end setRating
+
 end script

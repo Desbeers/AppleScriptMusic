@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var musicModel: MusicModel
+    @State private var hoverRating: Int = 0
     var body: some View {
         VStack {
             VStack {
@@ -36,6 +37,17 @@ struct ContentView: View {
                     Text(musicModel.trackDuration)
                         .modifier(ViewModifierRight())
                 }
+                Divider()
+                HStack {
+                    Text("Rating")
+                        .modifier(ViewModifierLeft())
+                    ratings
+                        .modifier(ViewModifierRight())
+                }
+                .padding(.top)
+                Text(musicModel.trackInfo.trackRating == 5 ? "If you lower the rating, the song will be unloved" : "If you rate the song 5 stars, it will be loved as well")
+                    .font(.caption)
+                    .padding(.top, 1)
                 HStack {
                     Button(action: {
                         musicModel.toggleLoved()
@@ -48,13 +60,21 @@ struct ContentView: View {
                     })
                         .padding(.top)
                 }
+                Text(musicModel.trackInfo.loved ? "If you unlove the song, the rating will be removed" : "If you love the song, the rating will be set to 5 stars")
+                    .font(.caption)
             }
             .padding()
-            Slider(value: $musicModel.soundVolume, in: 0...100,
-                   onEditingChanged: { _ in
-                musicModel.musicBridge.soundVolume = NSNumber(value: musicModel.soundVolume)
-            })
-                .frame(width: 200)
+            Divider()
+                .padding()
+            HStack {
+                Image(systemName: "speaker.fill")
+                Slider(value: $musicModel.soundVolume, in: 0...100,
+                       onEditingChanged: { _ in
+                    musicModel.musicBridge.soundVolume = NSNumber(value: musicModel.soundVolume)
+                })
+                Image(systemName: "speaker.wave.3.fill")
+            }
+            .frame(width: 200)
             HStack {
                 Button(action: {
                     musicModel.musicBridge.gotoPreviousTrack()
@@ -87,6 +107,27 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    /// Ratings
+    var ratings: some View {
+        HStack {
+            ForEach(1..<6, id: \.self) { number in
+                Image(systemName: "star.fill")
+                    .foregroundColor(number > musicModel.trackInfo.trackRating ? Color.secondary : Color.yellow)
+                    .onHover { hover in
+                        hoverRating = hover ? number : 0
+                    }
+                    .scaleEffect(hoverRating == number ? 2 : 1)
+                    .onTapGesture {
+                        if number != musicModel.trackInfo.trackRating {
+                            musicModel.setRating(rating: number)
+                        }
+                    }
+                Divider()
+                    .opacity(0)
+            }
+        }
+        .animation(.easeInOut(duration: 0.1), value: hoverRating)
+    }
     /// View modifier for Left column
     struct ViewModifierLeft: ViewModifier {
         func body(content: Content) -> some View {

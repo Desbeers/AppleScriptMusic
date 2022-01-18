@@ -36,6 +36,8 @@ import Foundation
     func gotoNextTrack()
     /// Love or unlove a song
     var loved: [NSString] { get set }
+    /// Rate a song
+    var rating: [NSString] { get set }
 }
 
 /// Music' 'player state' property
