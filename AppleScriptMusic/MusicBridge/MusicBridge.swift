@@ -38,6 +38,8 @@ import Foundation
     var loved: [NSString] { get set }
     /// Rate a song
     var rating: [NSString] { get set }
+    /// Send a notification
+    var notification: [NSString] { get set }
 }
 
 /// Music' 'player state' property

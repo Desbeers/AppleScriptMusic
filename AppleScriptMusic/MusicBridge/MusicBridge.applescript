@@ -10,7 +10,7 @@ script MusicBridge
 	end isRunning
 	
 	-- Get the current state of Music
-	to _playerState() -- () -> NSNumber (PlayerState)
+	to _playerState()
 		tell application id "com.apple.Music"
 			if running then
 				set currentState to player state
@@ -83,10 +83,8 @@ script MusicBridge
     -- because I want to make it more 'modulair' for future projects.
     to setLoved_(theTrack)
         set trk to getTrackFromLibrary_(theTrack)
-        set status to "I love this song"
         tell application id "com.apple.Music"
             if loved of trk is true then
-                set status to "I don't love this song anymore"
                 set loved of trk to false
                 -- If you unlove a song, the rating will be removed
                 set rating of trk to 1
@@ -96,7 +94,6 @@ script MusicBridge
                 set rating of trk to 100
             end if
         end tell
-        display notification status with title (name of trk) sound name "Frog"
     end setLoved
 
     -- Rate a song
@@ -109,7 +106,6 @@ script MusicBridge
         set trk to getTrackFromLibrary_(theTrack)
         -- The first 4 items of theTrack is the identification of the track
         set trackRating to item 5 of theTrack as integer * 20
-        set status to "I rate this song " & (trackRating / 20 as integer) & " stars"
         tell application id "com.apple.Music"
             set rating of trk to trackRating
             --- Love this song if it has 5 stars, unlove it when it is less
@@ -119,7 +115,6 @@ script MusicBridge
                 set loved of trk to false
             end if
         end tell
-        display notification status with title (name of trk) sound name "Frog"
     end setRating
 
     -- Get a track from the Music Library
@@ -137,5 +132,14 @@ script MusicBridge
         end tell
         return trk
     end getTrack
+
+    -- Send a notification
+    --
+    -- Much easier in AppleScript than in SwiftUI
+    to setNotification_(theNotification)
+        set theTitle to item 1 of theNotification as strings
+        set theMessage to item 2 of theNotification as strings
+        display notification theMessage with  title theTitle sound name "Frog"
+    end setNotification
 
 end script

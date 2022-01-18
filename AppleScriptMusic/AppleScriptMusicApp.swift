@@ -14,6 +14,8 @@ struct AppleScriptMusicApp: App {
     @StateObject var musicModel: MusicModel = .shared
     /// App delegate
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    /// Toggle for notfications
+    @AppStorage("showNotifications") var showNotifications = false
     /// The Scene
     var body: some Scene {
         WindowGroup {
@@ -23,7 +25,10 @@ struct AppleScriptMusicApp: App {
                 /// An empty toolbar so above will be shown below each other
                 .toolbar {
                     ToolbarItem {
-                        Spacer()
+                        Toggle(isOn: $showNotifications) {
+                            Image(systemName: showNotifications ? "bell.fill" : "bell")
+                        }
+                        .help(showNotifications ? "You get notifications" : "You get no notifications")
                     }
                 }
         }

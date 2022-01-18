@@ -53,9 +53,8 @@ class MusicModel: ObservableObject {
                 if let coverArt = match.artwork {
                     cover = coverArt
                 }
-                print(match.title)
             } else {
-                print("No match")
+                cover = nil
             }
         }
     }
@@ -68,7 +67,7 @@ class MusicModel: ObservableObject {
         do {
             iTunesLibrary = try ITLibrary(apiVersion: "1.0")
         } catch {
-            print("Error occured!")
+            print("Error getting Music songs")
             return [ITLibMediaItem]()
         }
         let songs = iTunesLibrary.allMediaItems
@@ -80,6 +79,10 @@ class MusicModel: ObservableObject {
         musicBridge.loved = trackID()
         /// Parse the track to update the UI
         parseTrack()
+        /// Show Notification
+        sendNotification(title: trackInfo.name,
+                         message: trackInfo.loved ? "I love this song" : "I don't love this song anymore"
+        )
     }
     /// Set the rating of a track in the UI
     @MainActor func setRating(rating: Int) {
@@ -87,7 +90,22 @@ class MusicModel: ObservableObject {
         musicBridge.rating = trackID() + [NSString(string: "\(rating)")]
         /// Parse the track to update the UI
         parseTrack()
+        /// Show Notification
+        sendNotification(title: trackInfo.name,
+                         message: "I rate this song \(trackInfo.trackRating) stars"
+        )
     }
+    /// Send a notification
+    private func sendNotification(title: String, message: String) {
+        /// Only send a notification is the uder wants it
+        if UserDefaults.standard.bool(forKey: "showNotifications") {
+            musicBridge.notification = [
+                title as NSString,
+                message as NSString
+            ]
+        }
+    }
+    
     /// Basic ID for a track
     /// - Note: Persistent ID between AppleScript and iTunesLibrary do not match
     /// - Returns: Name, artist, album and track as [NSString]
