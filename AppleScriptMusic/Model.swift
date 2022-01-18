@@ -7,6 +7,7 @@
 
 import Foundation
 import AppleScriptObjC
+import iTunesLibrary
 
 class MusicModel: ObservableObject {
     /// The shared instance of this MusicModel class
@@ -15,6 +16,8 @@ class MusicModel: ObservableObject {
     var musicBridge: MusicBridge
     /// Info of current playing track; published because in the UI
     @Published var trackInfo = Track()
+    /// the cover of current song
+    var cover: ITLibArtwork?
     /// Value of volume level; published because in the UI
     @Published var soundVolume: Double = 0
     /// The current state of Music
@@ -25,19 +28,52 @@ class MusicModel: ObservableObject {
     var isRunning: Bool {
         return musicBridge._isRunning.boolValue
     }
-    /// AppleScriptObjC setup
+    /// The Music library
+    var musicSongs: [ITLibMediaItem] = []
+    /// Init the class
     init() {
+        /// AppleScriptObjC setup
         Bundle.main.loadAppleScriptObjectiveCScripts()
         //// create an instance of MusicBridge script object for Swift code to use
         let musicBridgeClass: AnyClass = NSClassFromString("MusicBridge")!
         self.musicBridge = musicBridgeClass.alloc() as! MusicBridge
+        /// Get all Music songs
+        musicSongs = getMusicSongs()
     }
     /// Update track info in the UI
     @MainActor func parseTrack() {
         /// trackInfo might be nil, so check...
         if let info = musicBridge.trackInfo as NSDictionary? {
             trackInfo = Track(dictionary: info)
+            if let match = musicSongs.first(where: {
+                $0.title == trackInfo.name  &&
+                $0.album.title == trackInfo.album &&
+                $0.trackNumber == trackInfo.trackNumber
+            }) {
+                if let coverArt = match.artwork {
+                    cover = coverArt
+                }
+                print(match.title)
+            } else {
+                print("No match")
+            }
         }
+    }
+    /// Get all songs from Music
+    /// - Returns: The songs
+    func getMusicSongs() -> [ITLibMediaItem] {
+        musicSongs = []
+        print("Getting Music songs...")
+        let iTunesLibrary: ITLibrary
+        do {
+            iTunesLibrary = try ITLibrary(apiVersion: "1.0")
+        } catch {
+            print("Error occured!")
+            return [ITLibMediaItem]()
+        }
+        let songs = iTunesLibrary.allMediaItems
+        print("Found \(songs.count) songs")
+        return songs
     }
     /// Toggle the 'love' button in the UI
     @MainActor func toggleLoved() {

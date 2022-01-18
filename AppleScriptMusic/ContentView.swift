@@ -12,58 +12,72 @@ struct ContentView: View {
     @State private var hoverRating: Int = 0
     var body: some View {
         VStack {
-            VStack {
-                HStack {
-                    Text("Name")
-                        .modifier(ViewModifierLeft())
-                    Text(musicModel.trackInfo.name)
-                        .modifier(ViewModifierRight())
+            HStack {
+                Group {
+                    if let cover = musicModel.cover {
+                        Image(nsImage: cover.image!)
+                            .resizable()
+                    } else {
+                        Image(systemName: "music.quarternote.3")
+                            .resizable()
+                    }
                 }
-                HStack {
-                    Text("Artist")
-                        .modifier(ViewModifierLeft())
-                    Text(musicModel.trackInfo.artist)
-                        .modifier(ViewModifierRight())
+                .cornerRadius(2)
+                .frame(width: 140, height: 140)
+                .padding(.leading)
+                
+                VStack {
+                    HStack {
+                        Text("Name")
+                            .modifier(ViewModifierLeft())
+                        Text(musicModel.trackInfo.name)
+                            .modifier(ViewModifierRight())
+                    }
+                    HStack {
+                        Text("Artist")
+                            .modifier(ViewModifierLeft())
+                        Text(musicModel.trackInfo.artist)
+                            .modifier(ViewModifierRight())
+                    }
+                    HStack {
+                        Text("Album")
+                            .modifier(ViewModifierLeft())
+                        Text(musicModel.trackInfo.album)
+                            .modifier(ViewModifierRight())
+                    }
+                    HStack {
+                        Text("Duration")
+                            .modifier(ViewModifierLeft())
+                        Text(musicModel.trackDuration)
+                            .modifier(ViewModifierRight())
+                    }
                 }
-                HStack {
-                    Text("Album")
-                        .modifier(ViewModifierLeft())
-                    Text(musicModel.trackInfo.album)
-                        .modifier(ViewModifierRight())
-                }
-                HStack {
-                    Text("Duration")
-                        .modifier(ViewModifierLeft())
-                    Text(musicModel.trackDuration)
-                        .modifier(ViewModifierRight())
-                }
-                Divider()
-                HStack {
-                    Text("Rating")
-                        .modifier(ViewModifierLeft())
-                    ratings
-                        .modifier(ViewModifierRight())
-                }
-                .padding(.top)
-                Text(musicModel.trackInfo.trackRating == 5 ? "If you lower the rating, the song will be unloved" : "If you rate the song 5 stars, it will be loved as well")
-                    .font(.caption)
-                    .padding(.top, 1)
-                HStack {
-                    Button(action: {
-                        musicModel.toggleLoved()
-                    }, label: {
-                        Label(title: {
-                            Text(musicModel.trackInfo.loved ? "Unlove this song" : "Love this song")
-                        }, icon: {
-                            Image(systemName: musicModel.trackInfo.loved ? "heart.fill" : "heart")
-                        })
-                    })
-                        .padding(.top)
-                }
-                Text(musicModel.trackInfo.loved ? "If you unlove the song, the rating will be removed" : "If you love the song, the rating will be set to 5 stars")
-                    .font(.caption)
             }
-            .padding()
+            .padding(.top)
+            Divider()
+                .padding(.horizontal)
+            HStack {
+                Text("Rating")
+                    .modifier(ViewModifierLeft())
+                ratings
+                    .modifier(ViewModifierRight())
+            }
+            .padding(.top)
+            Text(musicModel.trackInfo.trackRating == 5 ? "If you lower the rating, the song will be unloved" : "If you rate the song 5 stars, it will be loved as well")
+                .font(.caption)
+            HStack {
+                Button(action: {
+                    musicModel.toggleLoved()
+                }, label: {
+                    Label(title: {
+                        Text(musicModel.trackInfo.loved ? "Unlove this song" : "Love this song")
+                    }, icon: {
+                        Image(systemName: musicModel.trackInfo.loved ? "heart.fill" : "heart")
+                    })
+                })
+            }
+            Text(musicModel.trackInfo.loved ? "If you unlove the song, the rating will be removed" : "If you love the song, the rating will be set to 5 stars")
+                .font(.caption)
             Divider()
                 .padding()
             HStack {
@@ -95,7 +109,7 @@ struct ContentView: View {
             }
             .padding()
         }
-        .frame(width: 400)
+        .frame(width: 450, height: 400)
         .task {
             /// Update UI only if Music is already running
             if musicModel.isRunning {
@@ -111,6 +125,8 @@ extension ContentView {
     var ratings: some View {
         HStack {
             ForEach(1..<6, id: \.self) { number in
+                Divider()
+                    .opacity(0)
                 Image(systemName: "star.fill")
                     .foregroundColor(number > musicModel.trackInfo.trackRating ? Color.secondary : Color.yellow)
                     .onHover { hover in
@@ -122,8 +138,6 @@ extension ContentView {
                             musicModel.setRating(rating: number)
                         }
                     }
-                Divider()
-                    .opacity(0)
             }
         }
         .animation(.easeInOut(duration: 0.1), value: hoverRating)
@@ -133,7 +147,7 @@ extension ContentView {
         func body(content: Content) -> some View {
             content
                 .font(.headline)
-                .frame(width: 100, alignment: .trailing)
+                .frame(width: 60, alignment: .trailing)
         }
     }
     /// View modifier for Right column
