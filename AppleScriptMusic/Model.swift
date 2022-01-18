@@ -77,24 +77,27 @@ class MusicModel: ObservableObject {
     }
     /// Toggle the 'love' button in the UI
     @MainActor func toggleLoved() {
-        musicBridge.loved = [
+        musicBridge.loved = trackID()
+        /// Parse the track to update the UI
+        parseTrack()
+    }
+    /// Set the rating of a track in the UI
+    @MainActor func setRating(rating: Int) {
+        /// Get the basic ID and add the rating value
+        musicBridge.rating = trackID() + [NSString(string: "\(rating)")]
+        /// Parse the track to update the UI
+        parseTrack()
+    }
+    /// Basic ID for a track
+    /// - Note: Persistent ID between AppleScript and iTunesLibrary do not match
+    /// - Returns: Name, artist, album and track as [NSString]
+    private func trackID() -> [NSString] {
+        return [
             trackInfo.name as NSString,
             trackInfo.artist as NSString,
             trackInfo.album as NSString,
             NSString(string: "\(trackInfo.trackNumber)")
         ]
-        parseTrack()
-    }
-    /// Set the rating of a track in the UI
-    @MainActor func setRating(rating: Int) {
-        musicBridge.rating = [
-            trackInfo.name as NSString,
-            trackInfo.artist as NSString,
-            trackInfo.album as NSString,
-            NSString(string: "\(trackInfo.trackNumber)"),
-            NSString(string: "\(rating)")
-        ]
-        parseTrack()
     }
     /// The duration of the current track as String
     var trackDuration: String {
@@ -124,7 +127,7 @@ extension Track {
         self.name = dictionary.value(forKey: "trackName") as! String
         self.loved = dictionary.value(forKey: "trackLoved") as! Bool
         self.trackNumber = dictionary.value(forKey: "trackNumber") as! Int
-        /// Track rating im Music goes from 0 - 100, the UI is using only 5 stars
+        /// Track rating in Music goes from 0 - 100, the UI is using only 5 stars
         self.trackRating = (dictionary.value(forKey: "trackRating") as! Int) / 20
     }
 }
