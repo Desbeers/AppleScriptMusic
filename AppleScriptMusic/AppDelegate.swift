@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         /// Music emits track change notifications; very handy for UI refreshes
         let dnc = DistributedNotificationCenter.default()
-        dnc.addObserver(self, selector: #selector(AppDelegate.updateTrackInfo),
+        dnc.addObserver(self, selector: #selector(AppDelegate.updateState),
                          name: NSNotification.Name(rawValue: "com.apple.Music.playerInfo"), object: nil)
     }
 
@@ -22,13 +22,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         /// Nothing to do here
     }
     
-    /// Update the track information when Music sends an update
-    @objc func updateTrackInfo(_ aNotification: Notification) {
-        /// nil indicates error, e.g. current track not available
-        if (musicModel.musicBridge.trackInfo) != nil {
-            Task { @MainActor in
-                musicModel.parseTrack()
-            }
+    /// Update the state of this application when Music sends an update
+    @objc func updateState(_ aNotification: Notification) {
+        /// Check if there is a song or not
+        if let message = aNotification.userInfo as NSDictionary?, message["Name"] as? String == nil {
+            /// A notification without track name; Music stopped playing or is about to quit
+            /// Give it moment to let Music setlle when it quits or else we get AppleScript errors
+            sleep(1)
+        }
+        Task {
+            await musicModel.getMusicState()
         }
     }
 }

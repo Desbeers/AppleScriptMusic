@@ -2,15 +2,8 @@ script MusicBridge
 	
 	property parent : class "NSObject"
 	
-	-- Check if Music is running
-	to _isRunning()
-		-- AppleScript will automatically launch apps before sending Apple events;
-		-- if that is undesirable, check the app object's `running` property first
-        return running of application id "com.apple.Music"
-	end isRunning
-	
 	-- Get the current state of Music
-	to _playerState()
+	to playerState()
 		tell application id "com.apple.Music"
 			if running then
 				set currentState to player state
@@ -21,7 +14,7 @@ script MusicBridge
 					set i to i + 1
 				end repeat
 			end if
-            -- 'unknown'
+            -- 'Music is not running'
 			return 0
 		end tell
 	end playerState
@@ -30,24 +23,19 @@ script MusicBridge
 	to trackInfo()
 		tell application id "com.apple.Music"
 			try
-				return {trackName:name, trackArtist:artist, trackAlbum:album, trackLoved:loved, trackNumber:track number, trackRating: rating, trackRatingKind: rating kind} of current track
+				return {trackName:name, trackArtist:artist, trackAlbum:album, trackLoved:loved, trackNumber:track number, trackDuration: duration, trackRating: rating, trackRatingKind: rating kind} of current track
 			on error number -1728 -- current track is not available
 				return missing value -- nil
 			end try
 		end tell
 	end trackInfo
 	
-    -- Get the duration of the current playing track
-	to trackDuration()
-		tell application id "com.apple.Music"
-			return duration of current track
-		end tell
-	end trackDuration
-	
 	-- Get the volume of Music
 	to soundVolume()
 		tell application id "com.apple.Music"
-			return sound volume -- ASOC will convert returned integer to NSNumber
+            if running then
+                return sound volume -- ASOC will convert returned integer to NSNumber
+            end if
 		end tell
 	end soundVolume
 	

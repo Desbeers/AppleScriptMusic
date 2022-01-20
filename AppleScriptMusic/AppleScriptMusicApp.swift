@@ -20,8 +20,8 @@ struct AppleScriptMusicApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().environmentObject(musicModel)
-                .navigationTitle("SwiftUI Music Remote with AppleScript")
-                .navigationSubtitle("Proof of concept")
+                .navigationTitle("Music Remote")
+                .navigationSubtitle(musicModel.musicState.message)
                 /// An empty toolbar so above will be shown below each other
                 .toolbar {
                     ToolbarItem {

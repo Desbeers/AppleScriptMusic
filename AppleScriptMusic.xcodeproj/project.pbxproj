@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D734FFDD279832CB00913532 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = D734FFDC279832CB00913532 /* Track.swift */; };
 		D7F7CD6427935CCC0013D0BB /* AppleScriptMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD6327935CCC0013D0BB /* AppleScriptMusicApp.swift */; };
 		D7F7CD6627935CCC0013D0BB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD6527935CCC0013D0BB /* ContentView.swift */; };
 		D7F7CD6827935CCE0013D0BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7F7CD6727935CCE0013D0BB /* Assets.xcassets */; };
@@ -15,10 +16,11 @@
 		D7F7CD7627935D760013D0BB /* MusicBridge.applescript in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7427935D760013D0BB /* MusicBridge.applescript */; };
 		D7F7CD782793619A0013D0BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD772793619A0013D0BB /* AppDelegate.swift */; };
 		D7F7CD7B279367F00013D0BB /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F7CD7A279367F00013D0BB /* AppleScriptObjC.framework */; };
-		D7F7CD7D279436F60013D0BB /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7C279436F60013D0BB /* Model.swift */; };
+		D7F7CD7D279436F60013D0BB /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F7CD7C279436F60013D0BB /* MusicModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D734FFDC279832CB00913532 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		D7BA10412794AFEC00BCF2D9 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		D7BA10422794B1E500BCF2D9 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		D7F7CD6027935CCC0013D0BB /* AppleScriptMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppleScriptMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -31,7 +33,7 @@
 		D7F7CD7427935D760013D0BB /* MusicBridge.applescript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.applescript; path = MusicBridge.applescript; sourceTree = "<group>"; };
 		D7F7CD772793619A0013D0BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7F7CD7A279367F00013D0BB /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
-		D7F7CD7C279436F60013D0BB /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		D7F7CD7C279436F60013D0BB /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		D7F7CD7E2794A6D50013D0BB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,7 +75,7 @@
 				D7F7CD7227935D2A0013D0BB /* MusicBridge */,
 				D7F7CD6327935CCC0013D0BB /* AppleScriptMusicApp.swift */,
 				D7F7CD6527935CCC0013D0BB /* ContentView.swift */,
-				D7F7CD7C279436F60013D0BB /* Model.swift */,
+				D7F7CD7C279436F60013D0BB /* MusicModel.swift */,
 				D7F7CD772793619A0013D0BB /* AppDelegate.swift */,
 				D7F7CD6727935CCE0013D0BB /* Assets.xcassets */,
 				D7F7CD6C27935CCE0013D0BB /* AppleScriptMusic.entitlements */,
@@ -95,6 +97,7 @@
 			children = (
 				D7F7CD7427935D760013D0BB /* MusicBridge.applescript */,
 				D7F7CD7327935D760013D0BB /* MusicBridge.swift */,
+				D734FFDC279832CB00913532 /* Track.swift */,
 			);
 			path = MusicBridge;
 			sourceTree = "<group>";
@@ -201,9 +204,10 @@
 				D7F7CD6627935CCC0013D0BB /* ContentView.swift in Sources */,
 				D7F7CD6427935CCC0013D0BB /* AppleScriptMusicApp.swift in Sources */,
 				D7F7CD7627935D760013D0BB /* MusicBridge.applescript in Sources */,
-				D7F7CD7D279436F60013D0BB /* Model.swift in Sources */,
+				D7F7CD7D279436F60013D0BB /* MusicModel.swift in Sources */,
 				D7F7CD782793619A0013D0BB /* AppDelegate.swift in Sources */,
 				D7F7CD7527935D760013D0BB /* MusicBridge.swift in Sources */,
+				D734FFDD279832CB00913532 /* Track.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,24 +13,17 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HStack {
-                Group {
-                    if let cover = musicModel.cover {
-                        Image(nsImage: cover.image!)
-                            .resizable()
-                    } else {
-                        Image(systemName: "music.quarternote.3")
-                            .resizable()
-                    }
-                }
-                .cornerRadius(2)
-                .frame(width: 140, height: 140)
-                .padding(.leading)
-                
+                musicModel.trackInfo.cover
+                    .resizable()
+                    .cornerRadius(2)
+                    .frame(width: 140, height: 140)
+                    .padding(.leading)
+                    .opacity(musicModel.trackInfo.title.isEmpty ? 0.1 : 1)
                 VStack {
                     HStack {
-                        Text("Name")
+                        Text("Title")
                             .modifier(ViewModifierLeft())
-                        Text(musicModel.trackInfo.name)
+                        Text(musicModel.trackInfo.title)
                             .modifier(ViewModifierRight())
                     }
                     HStack {
@@ -48,7 +41,7 @@ struct ContentView: View {
                     HStack {
                         Text("Duration")
                             .modifier(ViewModifierLeft())
-                        Text(musicModel.trackDuration)
+                        Text(musicModel.trackInfo.duration)
                             .modifier(ViewModifierRight())
                     }
                 }
@@ -63,7 +56,7 @@ struct ContentView: View {
                     .modifier(ViewModifierRight())
             }
             .padding(.top)
-            Text(musicModel.trackInfo.trackRating == 5 ? "If you lower the rating, the song will be unloved" : "If you rate the song 5 stars, it will be loved as well")
+            Text(musicModel.trackInfo.rating == 5 ? "If you lower the rating, the song will be unloved" : "If you rate the song 5 stars, it will be loved as well")
                 .font(.caption)
             HStack {
                 Button(action: {
@@ -82,9 +75,9 @@ struct ContentView: View {
                 .padding()
             HStack {
                 Image(systemName: "speaker.fill")
-                Slider(value: $musicModel.soundVolume, in: 0...100,
+                Slider(value: $musicModel.musicState.volume, in: 0...100,
                        onEditingChanged: { _ in
-                    musicModel.musicBridge.soundVolume = NSNumber(value: musicModel.soundVolume)
+                    musicModel.musicBridge.soundVolume = NSNumber(value: musicModel.musicState.volume)
                 })
                 Image(systemName: "speaker.wave.3.fill")
             }
@@ -98,7 +91,7 @@ struct ContentView: View {
                 Button(action: {
                     musicModel.musicBridge.playPause()
                 }, label: {
-                    Image(systemName: musicModel.playerState == .playing ? "pause.fill" : "play.fill")
+                    Image(systemName: musicModel.musicState.status == .playing ? "pause.fill" : "play.fill")
                 })
                     .frame(width: 40)
                 Button(action: {
@@ -109,13 +102,11 @@ struct ContentView: View {
             }
             .padding()
         }
+        .disabled(!musicModel.musicState.running)
+        .opacity(musicModel.musicState.running ? 1 : 0.5)
         .frame(width: 450, height: 400)
         .task {
-            /// Update UI only if Music is already running
-            if musicModel.isRunning {
-                musicModel.parseTrack()
-            }
-            musicModel.soundVolume = musicModel.musicBridge.soundVolume.doubleValue
+            await musicModel.getMusicState()
         }
     }
 }
@@ -128,15 +119,15 @@ extension ContentView {
                 Divider()
                     .opacity(0)
                 Image(systemName: "star.fill")
-                    .foregroundColor(number > musicModel.trackInfo.trackRating ? Color.secondary : Color.yellow)
+                    .foregroundColor(number > musicModel.trackInfo.rating ? Color.secondary : Color.yellow)
                     .onHover { hover in
                         hoverRating = hover ? number : 0
                     }
                     .scaleEffect(hoverRating == number ? 2 : 1)
                     .onTapGesture {
-                        if number != musicModel.trackInfo.trackRating {
-                            musicModel.setRating(rating: number)
-                        }
+                        /// Remove the star is it is the current selection
+                        let rating = number == musicModel.trackInfo.rating ? number - 1 : number
+                        musicModel.setRating(rating: rating)
                     }
             }
         }
